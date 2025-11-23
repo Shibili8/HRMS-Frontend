@@ -13,10 +13,13 @@ export default function Navbar() {
       <div className="flex justify-between items-center">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <span className="font-bold text-xl">HRMS</span>
-          <span className="text-sm text-blue-100 hidden sm:inline">
+          <Link to="/dashboard" className="hover:underline">
+          <span className="gap-5 font-bold text-xl ">HRMS</span>
+          </Link>
+          <span className="text-m text-blue-100 hidden sm:inline">
             Human Resource Management System
           </span>
+          
         </div>
 
         {/* Hamburger Button (mobile only) */}
