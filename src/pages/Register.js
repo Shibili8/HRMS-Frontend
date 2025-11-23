@@ -13,22 +13,29 @@ export default function Register() {
     password: "",
   });
 
+  const [error, setError] = useState("");
+
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
   async function handleRegister(e) {
     e.preventDefault();
+    setError("");
+
+    if (!form.email.includes("@")) {
+      return setError("Please enter a valid email address.");
+    }
+
     try {
       const res = await api.post("/auth/register", form);
       login(res.data.token);
     } catch (err) {
-      console.error("Frontend registration error:", err);
-      if (err.response?.data?.message === "Email already in use") {
-        alert("That email is already registered. Try logging in.");
-      } else {
-        alert("Registration failed");
-      }
+      const msg =
+        err.response?.data?.message ||
+        "Registration failed. Please try again.";
+
+      setError(msg);
     }
   }
 
@@ -40,12 +47,20 @@ export default function Register() {
         </h1>
 
         <form onSubmit={handleRegister} className="flex flex-col gap-4">
+
+          {error && (
+            <p className="text-red-600 text-center text-sm font-medium">
+              {error}
+            </p>
+          )}
+
           <input
             name="orgName"
             value={form.orgName}
             onChange={handleChange}
             className="border p-2 rounded"
             placeholder="Organisation Name"
+            required
           />
           <input
             name="adminName"
@@ -53,13 +68,16 @@ export default function Register() {
             onChange={handleChange}
             className="border p-2 rounded"
             placeholder="Admin Name"
+            required
           />
           <input
+            type="email"
             name="email"
             value={form.email}
             onChange={handleChange}
             className="border p-2 rounded"
             placeholder="Email"
+            required
           />
           <input
             name="password"
@@ -68,6 +86,7 @@ export default function Register() {
             onChange={handleChange}
             className="border p-2 rounded"
             placeholder="Password"
+            required
           />
 
           <button className="bg-green-600 text-white p-2 rounded hover:bg-green-700">
