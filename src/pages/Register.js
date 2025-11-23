@@ -47,13 +47,6 @@ export default function Register() {
         </h1>
 
         <form onSubmit={handleRegister} className="flex flex-col gap-4">
-
-          {error && (
-            <p className="text-red-600 text-center text-sm font-medium">
-              {error}
-            </p>
-          )}
-
           <input
             name="orgName"
             value={form.orgName}
@@ -88,6 +81,11 @@ export default function Register() {
             placeholder="Password"
             required
           />
+          {error && (
+            <p className="text-red-600 text-sm font-medium">
+              {error}
+            </p>
+          )}
 
           <button className="bg-green-600 text-white p-2 rounded hover:bg-green-700">
             Register

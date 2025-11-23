@@ -7,15 +7,22 @@ export default function Login() {
   const { login } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   async function handleLogin(e) {
     e.preventDefault();
+    setError("");
+
+    if (!email.includes("@")) {
+      return setError("Please enter a valid email address.");
+    }
+
     try {
       const res = await api.post("/auth/login", { email, password });
       login(res.data.token);
     } catch (err) {
-      console.error("Login error:", err);
-      alert("Invalid email or password");
+      const msg = err.response?.data?.message || "Invalid email or password";
+      setError(msg);
     }
   }
 
@@ -26,10 +33,12 @@ export default function Login() {
 
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
           <input
+            type="email"
             className="border p-2 rounded"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
 
           <input
@@ -38,12 +47,19 @@ export default function Login() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
+          {error && (
+            <p className="text-red-600 text-sm font-medium">
+              {error}
+            </p>
+          )}
 
           <button className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
             Login
           </button>
         </form>
+        
 
         <div className="mt-4 text-center text-sm">
           <p className="text-gray-600">
