@@ -28,6 +28,7 @@ export default function Employees() {
 
   async function handleDelete(id) {
     if (!window.confirm("Delete this employee?")) return;
+
     try {
       await api.delete(`/employees/${id}`);
       setEmployees((prev) => prev.filter((e) => e.id !== id));
@@ -40,22 +41,66 @@ export default function Employees() {
   return (
     <>
       <Navbar />
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
+        
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-semibold">Employees</h1>
+          <h1 className="text-xl sm:text-2xl font-semibold">Employees</h1>
           <button
             onClick={() => {
               setEditing(null);
               setShowForm(true);
             }}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="bg-blue-600 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded hover:bg-blue-700 text-sm sm:text-base"
           >
             + Add Employee
           </button>
         </div>
 
-        <div className="bg-white shadow rounded-xl overflow-hidden">
-          <table className="min-w-full text-sm">
+
+        <div className="sm:hidden">
+          {loading ? (
+            <p className="text-center py-4">Loading...</p>
+          ) : employees.length === 0 ? (
+            <p className="text-center py-4">No employees yet.</p>
+          ) : (
+            <div className="space-y-3">
+              {employees.map((emp) => (
+                <div
+                  key={emp.id}
+                  className="border rounded-lg p-4 bg-white shadow-sm"
+                >
+                  <p className="font-semibold text-gray-800">
+                    {emp.first_name} {emp.last_name}
+                  </p>
+                  <p className="text-sm text-gray-600">{emp.email}</p>
+                  <p className="text-sm text-gray-600">{emp.phone}</p>
+
+                  <div className="flex justify-end gap-3 mt-3">
+                    <button
+                      className="text-blue-600 text-sm"
+                      onClick={() => {
+                        setEditing(emp);
+                        setShowForm(true);
+                      }}
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      className="text-red-600 text-sm"
+                      onClick={() => handleDelete(emp.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="hidden sm:block bg-white shadow rounded-xl overflow-hidden">
+          <table className="min-w-full text-sm sm:text-base">
             <thead className="bg-gray-100">
               <tr>
                 <th className="text-left px-4 py-2">Name</th>
@@ -64,6 +109,7 @@ export default function Employees() {
                 <th className="text-right px-4 py-2">Actions</th>
               </tr>
             </thead>
+
             <tbody>
               {loading ? (
                 <tr>
@@ -85,9 +131,10 @@ export default function Employees() {
                     </td>
                     <td className="px-4 py-2">{emp.email}</td>
                     <td className="px-4 py-2">{emp.phone}</td>
+
                     <td className="px-4 py-2 text-right">
                       <button
-                        className="text-blue-600 mr-3"
+                        className="text-blue-600 mr-4 hover:underline"
                         onClick={() => {
                           setEditing(emp);
                           setShowForm(true);
@@ -95,8 +142,9 @@ export default function Employees() {
                       >
                         Edit
                       </button>
+
                       <button
-                        className="text-red-600"
+                        className="text-red-600 hover:underline"
                         onClick={() => handleDelete(emp.id)}
                       >
                         Delete

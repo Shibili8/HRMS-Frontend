@@ -4,6 +4,7 @@ import api from "../api/axios";
 export default function TeamAssignModal({ team, onClose, onAssigned }) {
   const [employees, setEmployees] = useState([]);
   const [employeeId, setEmployeeId] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");  
 
   useEffect(() => {
     async function loadEmployees() {
@@ -12,7 +13,7 @@ export default function TeamAssignModal({ team, onClose, onAssigned }) {
         setEmployees(res.data);
       } catch (err) {
         console.error("Load employees error:", err);
-        alert("Failed to load employees");
+        setErrorMsg("Failed to load employees"); 
       }
     }
     loadEmployees();
@@ -20,47 +21,50 @@ export default function TeamAssignModal({ team, onClose, onAssigned }) {
 
   async function handleAssign(e) {
     e.preventDefault();
-    if (!employeeId) return alert("Select an employee first");
+    setErrorMsg(""); 
+
+    if (!employeeId) {
+      setErrorMsg("Please select an employee"); 
+      return;
+    }
 
     try {
-      const res = await api.post(`/teams/${team.id}/assign`, {
+      await api.post(`/teams/${team.id}/assign`, {
         employeeId: Number(employeeId),
       });
 
-      alert("Employee assigned successfully");
-      
       if (onAssigned) onAssigned();
-
       onClose();
 
     } catch (err) {
       console.error("Assign error:", err);
 
       if (err.response?.status === 404) {
-        return alert("Employee or Team not found in your organisation");
+        return setErrorMsg("Employee or team not found in your organisation");
       }
 
       if (err.response?.status === 400) {
-        return alert(err.response?.data?.message || "Already assigned");
+        return setErrorMsg(err.response?.data?.message || "Already assigned");
       }
 
-      alert("Failed to assign employee");
+      setErrorMsg("Failed to assign employee");
     }
   }
 
   const assignedIds = team.employeeTeams?.map((et) => et.employee_id) || [];
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
-        <h2 className="text-xl font-semibold mb-4">
-          Assign Employee to {team.name}
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-3">
+      <div className="bg-white rounded-xl shadow-lg p-4 w-full max-w-sm sm:max-w-md">
+        
+        <h2 className="text-lg sm:text-xl font-semibold mb-3">
+          Assign to {team.name}
         </h2>
 
-        <form onSubmit={handleAssign} className="flex flex-col gap-4">
+        <form onSubmit={handleAssign} className="flex flex-col gap-3">
 
           <select
-            className="border p-2 rounded"
+            className="border p-2 rounded text-sm"
             value={employeeId}
             onChange={(e) => setEmployeeId(e.target.value)}
           >
@@ -70,30 +74,31 @@ export default function TeamAssignModal({ team, onClose, onAssigned }) {
               const isAssigned = assignedIds.includes(emp.id);
 
               return (
-                <option
-                  key={emp.id}
-                  value={emp.id}
-                  disabled={isAssigned}
-                >
+                <option key={emp.id} value={emp.id} disabled={isAssigned}>
                   {emp.first_name} {emp.last_name} ({emp.email})
-                  {isAssigned ? " — Already Assigned" : ""}
+                  {isAssigned ? " — Assigned" : ""}
                 </option>
               );
             })}
           </select>
-
-          <div className="flex justify-end gap-2 mt-4">
+          {errorMsg && (
+            <p className="text-red-600 text-sm mb-2">{errorMsg}</p>
+          )}
+          <div className="flex justify-end gap-2 mt-2">
             <button
               type="button"
-              onClick={onClose}
-              className="px-3 py-1 rounded border"
+              onClick={() => {
+                setEmployeeId(""); 
+              }}
+              className="px-3 py-1 text-sm rounded border"
             >
               Cancel
             </button>
 
+
             <button
               type="submit"
-              className="px-4 py-1 rounded bg-green-600 text-white hover:bg-green-700"
+              className="px-3 py-1 text-sm rounded bg-green-600 text-white hover:bg-green-700"
             >
               Assign
             </button>
