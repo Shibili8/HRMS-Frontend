@@ -9,9 +9,7 @@ export default function Navbar() {
 
   return (
     <nav className="bg-blue-600 text-white px-6 py-3 shadow-md">
-      {/* Top Bar */}
       <div className="flex justify-between items-center">
-        {/* Logo */}
         <div className="flex items-center gap-3">
           <Link to="/dashboard" className="hover:underline">
           <span className="gap-5 font-bold text-xl ">HRMS</span>
@@ -22,7 +20,6 @@ export default function Navbar() {
           
         </div>
 
-        {/* Hamburger Button (mobile only) */}
         <button
           className="sm:hidden text-white text-2xl"
           onClick={() => setOpen(!open)}
@@ -30,7 +27,6 @@ export default function Navbar() {
           {open ? <FiX /> : <FiMenu />}
         </button>
 
-        {/* Desktop Menu */}
         <div className="hidden sm:flex gap-5 items-center text-sm sm:text-base">
           <Link to="/dashboard" className="hover:underline">
             Dashboard
@@ -54,7 +50,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {open && (
         <div className="sm:hidden mt-3 flex flex-col gap-4 bg-blue-700 p-4 rounded-lg text-sm">
           <Link
