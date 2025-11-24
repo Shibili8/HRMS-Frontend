@@ -30,7 +30,6 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-200">
 
-        {/* Title Section */}
         <h1 className="text-2xl sm:text-3xl font-bold text-center text-blue-600 mb-1">
           Login
         </h1>
@@ -38,7 +37,6 @@ export default function Login() {
           Welcome back! Please sign in to continue.
         </p>
 
-        {/* Form */}
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
 
           <input
@@ -61,7 +59,6 @@ export default function Login() {
             required
           />
 
-          {/* Error Display */}
           {error && (
             <p className="text-red-600 text-sm sm:text-base font-medium -mt-2">
               {error}
@@ -76,7 +73,6 @@ export default function Login() {
           </button>
         </form>
 
-        {/* Footer Links */}
         <div className="mt-5 text-center text-sm sm:text-base">
           <p className="text-gray-600">
             Don’t have an account?

@@ -43,7 +43,6 @@ export default function Register() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-200">
 
-        {/* Title */}
         <h1 className="text-2xl sm:text-3xl font-bold text-center text-blue-600 mb-1">
           Register
         </h1>
@@ -52,7 +51,6 @@ export default function Register() {
           Create your organisation account
         </p>
 
-        {/* Form */}
         <form onSubmit={handleRegister} className="flex flex-col gap-4">
 
           <input
@@ -107,7 +105,6 @@ export default function Register() {
           </button>
         </form>
 
-        {/* Footer */}
         <div className="mt-5 text-center text-sm sm:text-base">
           <p className="text-gray-600">
             Already have an account?
