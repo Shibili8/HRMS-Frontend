@@ -10,21 +10,32 @@ export default function Login() {
   const [error, setError] = useState("");
 
   async function handleLogin(e) {
-    e.preventDefault();
-    setError("");
+  e.preventDefault();
 
-    if (!email.includes("@")) {
-      return setError("Please enter a valid email address.");
-    }
+  console.log("Login button clicked");
 
-    try {
-      const res = await api.post("/auth/login", { email, password });
-      login(res.data.token);
-    } catch (err) {
-      const msg = err.response?.data?.message || "Invalid email or password";
-      setError(msg);
-    }
+  setError("");
+
+  if (!email.includes("@")) {
+    console.log("Invalid email");
+    return setError("Please enter a valid email address.");
   }
+
+  try {
+    console.log("Sending request...");
+
+    const res = await api.post("/auth/login", { email, password });
+
+    console.log("Response:", res);
+
+    login(res.data.token);
+  } catch (err) {
+    console.log("Login Error:", err);
+
+    const msg = err.response?.data?.message || "Invalid email or password";
+    setError(msg);
+  }
+}
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
